@@ -1,4 +1,3 @@
-// 1325. Delete Leaves With A Given Value
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -19,16 +18,14 @@ public:
         return false;
     }
     TreeNode* removeLeafNodes(TreeNode* root, int target) {
-        queue<TreeNode*> q;
-        if(root == nullptr){
+        if(!root){
             return nullptr;
         }
 
         root->left  = removeLeafNodes(root->left, target);
         root->right = removeLeafNodes(root->right, target);
 
-        if(root->left == nullptr && root->right == nullptr && root->val == target){
-            delete root;
+        if(!root->left && !root->right && root->val == target){
             return nullptr;
         }
         return root;
