@@ -1,39 +1,45 @@
 // 1482. Minimum number of days to make M bouqets
 class Solution {
 public:
-    bool canMakeBouquets(vector<int>& bloomDay, int m, int k, int day) {
-        int count = 0, bouquets = 0;
-        for (int bloom : bloomDay) {
-            if (bloom <= day) {
-                count++;
-                if (count == k) {
-                    bouquets++;
-                    count = 0;
-                }
-            } else {
-                count = 0;
-            }
-        }
-        return bouquets >= m;
-    }
-
     int minDays(vector<int>& bloomDay, int m, int k) {
-        int n = bloomDay.size();
-        if (n < m * k) {
+        if ((long long)m * k > bloomDay.size()) {
             return -1;
         }
 
-        int left = *min_element(bloomDay.begin(), bloomDay.end());
-        int right = *max_element(bloomDay.begin(), bloomDay.end());
+        int low = 1, high = 1e9;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
 
-        while (left < right) {
-            int mid = left + (right - left) / 2;
             if (canMakeBouquets(bloomDay, m, k, mid)) {
-                right = mid;
+                high = mid;
             } else {
-                left = mid + 1;
+                low = mid + 1;
             }
         }
-        return left;
+
+        return low;
+    }
+
+private:
+    bool canMakeBouquets(vector<int>& bloomDay, int m, int k, int day) {
+        int total = 0;
+        for (int i = 0; i < bloomDay.size(); i++) {
+            int count = 0;
+            while (i < bloomDay.size() && count < k && bloomDay[i] <= day) {
+                count++;
+                i++;
+            }
+
+            if (count == k) {
+                total++;
+                i--;
+            }
+
+            if (total >= m) {
+                return true;
+            }
+        }
+
+        return false;
     }
 };
